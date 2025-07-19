@@ -1,46 +1,55 @@
-# .github/workflows/pages.yml
+name: Build and Deploy Jekyll site to GitHub Pages
 
-name: Deploy Jekyll site to GitHub Pages
-
+# Запускаем на пуш в main
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
+
+# Разрешаем этой сборке пушить в Pages
+permissions:
+  pages: write
+  id-token: write
 
 jobs:
-  build:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1) Забираем ваши файлы
+      - uses: actions/checkout@v3
+
+      # 2) Подготовка Pages
+      - name: Configure Pages
+        uses: actions/configure-pages@v3
+
+      # 3) Устанавливаем Ruby
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.1'
+
+      # 4) Устанавливаем гемы (Jekyll, плагины и т.п.)
+      - name: Install dependencies
+        run: bundle install --jobs 4 --retry 3
+
+      # 5) Строим сайт в папку _site
+      - name: Build the site
+        run: bundle exec jekyll build --destination _site
+
+      # 6) Упаковываем результат сборки для деплоя
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: _site
+
+  deploy:
+    needs: build-and-deploy
     runs-on: ubuntu-latest
     permissions:
       pages: write
       id-token: write
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Setup Ruby & cache gems
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.x'       # подберите вашу версию Ruby
-          bundler-cache: true       # кешировать гемы между прогонками
-
-      - name: Install dependencies
-        run: bundle install
-
-      - name: Build site with Jekyll
-        run: bundle exec jekyll build --config _config.yml
-
-      - name: Upload generated site
-        uses: actions/upload-pages-artifact@v1
-        with:
-          path: ./_site
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
+      # 7) Деплоим через официальный Action
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
