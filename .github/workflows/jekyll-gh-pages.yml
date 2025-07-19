@@ -1,14 +1,18 @@
 name: Build and Deploy Jekyll site to GitHub Pages
 
+# Триггер запуска — пуш в ветку main
 on:
   push:
-    branches: [main]
+    branches:
+      - main
 
+# Разрешения, необходимые для доступа к репозиторию и страницам
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: read    # чтение содержимого репозитория
+  pages: write      # запись для GitHub Pages (деплой)
+  id-token: write   # требуется для безопасности деплоя
 
+# Чтобы не запускать одновременно несколько сборок страниц
 concurrency:
   group: "pages"
   cancel-in-progress: false
@@ -17,40 +21,40 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      # 🧾 Клонируем репозиторий
+      # 1. Клонируем репозиторий с кодом
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # ⚙️ Настраиваем Ruby
+      # 2. Устанавливаем Ruby нужной версии и кешируем bundler зависимости
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.1'
           bundler-cache: true
 
-      # 📦 Устанавливаем зависимости
+      # 3. Устанавливаем зависимости через bundler
       - name: Install dependencies
         run: bundle install --jobs 4 --retry 3
 
-      # 🛠 Сборка Jekyll-сайта
+      # 4. Собираем сайт Jekyll в папку _site
       - name: Build Jekyll site
         run: bundle exec jekyll build --destination _site
 
-      # 📤 Загружаем в Pages артефакт
+      # 5. Загружаем собранный сайт как артефакт для деплоя
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v2
         with:
           path: _site
 
   deploy:
-    needs: build
+    needs: build  # Ждем завершения build
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
+      # 6. Деплоим сайт на GitHub Pages из загруженного артефакта
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/upload-artifact@v4
-
+        uses: actions/deploy-pages@v1
