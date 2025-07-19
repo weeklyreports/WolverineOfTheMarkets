@@ -1,27 +1,21 @@
-# ════════════════════════════════════════════════════════════
-# Подключаем удалённую тему minima
-remote_theme: pages-themes/minima@v0.2.0
-
-# Отключаем встроенную тему, чтобы не было конфликта
+# Отключаем внешнюю тему, полностью контролируем через _layouts
 theme: null
 
-# Плагины, которые нам нужны
+# Плагины (GitHub Pages уже предустановлены)
 plugins:
   - jekyll-feed
-  - jekyll-remote-theme
 
-# Парсер Markdown
+# Markdown‑парсер
 markdown: kramdown
 
-# ЧПУ для постов
+# Фиксируем URL для всех постов
 permalink: /:year-:month-:day-:title.html
 
-# По-умолчанию для файлов из _posts используем layout "post"
+# Значения по умолчанию для файлов из _posts
 defaults:
   -
     scope:
-      path: ""
+      path: ""       # весь сайт
       type: "posts"
     values:
       layout: post
-      permalink: /:year-:month-:day-:title.html
