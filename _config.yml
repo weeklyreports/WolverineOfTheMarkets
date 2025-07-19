@@ -1,0 +1,6 @@
+# _config.yml
+title: WolverineOfTheMarkets
+theme: minima         # готовая тема от GitHub, можно поменять
+markdown: kramdown
+plugins:
+  - jekyll-feed
