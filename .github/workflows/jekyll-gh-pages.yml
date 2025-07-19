@@ -1,57 +1,55 @@
 name: Build and Deploy Jekyll site to GitHub Pages
 
-# Запускаем при пуше в main
 on:
   push:
-    branches:
-      - main
+    branches: [main]
 
-# Разрешаем этой сборке публиковать Pages
 permissions:
+  contents: read
   pages: write
   id-token: write
 
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
-
     steps:
-      # 1) Забираем весь код
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      # 🧾 Клонируем репозиторий
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      # 2) Настраиваем GitHub Pages
-      - name: Configure GitHub Pages
-        uses: actions/configure-pages@v3
-
-      # 3) Устанавливаем Ruby (с поддержкой bundler)
+      # ⚙️ Настраиваем Ruby
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.1
+          ruby-version: '3.1'
+          bundler-cache: true
 
-      # 4) Устанавливаем гемы из Gemfile
+      # 📦 Устанавливаем зависимости
       - name: Install dependencies
         run: bundle install --jobs 4 --retry 3
 
-      # 5) Собираем статический сайт в папку _site
-      - name: Build site with Jekyll
+      # 🛠 Сборка Jekyll-сайта
+      - name: Build Jekyll site
         run: bundle exec jekyll build --destination _site
 
-      # 6) Упаковываем полученный _site для деплоя
+      # 📤 Загружаем в Pages артефакт
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v2
         with:
           path: _site
 
   deploy:
-    needs: build-and-deploy
+    needs: build
     runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
-      # 7) Публикуем Pages
       - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v1
+        id: deployment
+        uses: actions/deploy-pages@v3
