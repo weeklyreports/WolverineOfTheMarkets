@@ -1,21 +1,19 @@
-# Отключаем внешнюю тему, полностью контролируем через _layouts
-theme: null
+# _config.yml
+theme: null            # отключаем любую внешнюю тему — работаем только с локальными layouts
 
-# Плагины (GitHub Pages уже предустановлены)
 plugins:
-  - jekyll-feed
+  - jekyll-feed       # ваш плагин для RSS (оставьте, если нужен)
+#  - jekyll-remote-theme   # НЕ нужно, если вы больше не используете remote_theme
 
-# Markdown‑парсер
-markdown: kramdown
+markdown: kramdown     # парсер Markdown
 
-# Фиксируем URL для всех постов
 permalink: /:year-:month-:day-:title.html
 
-# Значения по умолчанию для файлов из _posts
 defaults:
   -
     scope:
-      path: ""       # весь сайт
+      path: ""       
       type: "posts"
     values:
       layout: post
+      permalink: /:year-:month-:day-:title.html
