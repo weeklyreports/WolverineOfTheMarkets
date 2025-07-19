@@ -1,62 +1,25 @@
 <!DOCTYPE html>
-<html lang="ru" class="scroll-smooth" 
-      data-theme="light" 
-      x-data="{ dark: window.matchMedia('(prefers-color-scheme: dark)').matches }" 
-      :class="{ 'dark': dark }" 
-      x-init="
-        // слушаем смену системной темы в реальном времени
-        window.matchMedia('(prefers-color-scheme: dark)')
-              .addEventListener('change', e => dark = e.matches)
-      ">
+<html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <!-- Подключаем Alpine.js для простой logics и Tailwind CDN -->
-  <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <title>{{ page.title }} | {{ site.title }}</title>
-  <style>
-    /* Подключаем классические стили prose + темный режим */
-    @layer base {
-      body {
-        @apply bg-white text-gray-800;
-      }
-      .dark body {
-        @apply bg-gray-900 text-gray-100;
-      }
-      /* Стили для markdown-контента */
-      .prose {
-        @apply mx-auto py-8 px-4 max-w-3xl;
-      }
-      .prose h2 { @apply mt-8 mb-4; }
-      .prose ul, .prose ol { @apply ml-6 mb-6; }
-      .prose table {
-        @apply w-full border-collapse mb-6;
-      }
-      .prose th, .prose td {
-        @apply border px-4 py-2;
-      }
-      .prose thead th {
-        @apply bg-gray-200 dark:bg-gray-700;
-      }
-      .prose tr:nth-child(even) td {
-        @apply bg-gray-50 dark:bg-gray-800;
-      }
-    }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{{ page.title }} — WolverineOfTheMarkets</title>
+  <!-- Вот здесь Minima автоматически подключит свои CSS -->
+  {{ content_for_header }}
 </head>
-<body class="prose dark:prose-invert">
-  <article>
+<body class="bg-gray-900 text-gray-100">
+  <header class="site-header">
+    <h1 class="site-title"><a href="{{ "/" | absolute_url }}">{{ site.title }}</a></h1>
+  </header>
+
+  <main class="prose prose-invert mx-auto py-8">
+    <h1>{{ page.title }}</h1>
+    <p class="text-sm text-gray-400">Обновлено: {{ page.date | date: "%-d %B %Y" }}</p>
     {{ content }}
-  </article>
-  <!-- Кнопка переключения темы вручную -->
-  <button 
-    @click="dark = !dark"
-    class="fixed bottom-4 right-4 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-100 p-3 rounded-full shadow-lg"
-    title="Переключить тему">
-    <template x-if="dark">🌞</template>
-    <template x-if="!dark">🌙</template>
-  </button>
+  </main>
+
+  <footer class="site-footer prose prose-invert text-center py-4">
+    © {{ site.time | date: "%Y" }} WolverineOfTheMarkets
+  </footer>
 </body>
 </html>
-
