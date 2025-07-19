@@ -1,17 +1,18 @@
 ---
-layout: post
+layout: default
 title: WolverineOfTheMarkets
+permalink: /
 ---
 
-# Добро пожаловать на WolverineOfTheMarkets!
+# Добро пожаловать!
 
-Здесь будут ссылки на ваши свежие аналитические посты:
+Список всех публикаций:
 
-<ul>
+<ul class="list-disc ml-6">
 {% for post in site.posts %}
-  <li>
-    <time>{{ post.date | date: "%-d %B %Y" }}</time> —
-    <a href="{{ post.url }}">{{ post.title }}</a>
+  <li class="mb-1">
+    <time class="text-gray-400">{{ post.date | date: "%-d %B %Y" }}</time>
+    — <a href="{{ post.url }}" class="text-blue-400 hover:underline">{{ post.title }}</a>
   </li>
 {% endfor %}
 </ul>
