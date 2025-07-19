@@ -1,0 +1,10 @@
+---
+layout: default
+---
+<section class="p-6 bg-gray-900 rounded-lg">
+  <h1 class="text-3xl font-bold mb-2 text-yellow-400">{{ page.title }}</h1>
+  <p class="text-sm text-gray-400 mb-6">
+    Обновлено: <strong>{{ page.date | date: "%-d %B %Y" }}</strong>
+  </p>
+  {{ content }}
+</section>
