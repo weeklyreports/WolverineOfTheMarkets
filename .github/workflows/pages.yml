@@ -1,48 +1,57 @@
-# .github/workflows/pages.yml
 name: Build and Deploy Jekyll site to GitHub Pages
 
+# Запускаем при пуше в main
 on:
   push:
     branches:
       - main
-  workflow_dispatch:
 
+# Разрешаем этой сборке публиковать Pages
 permissions:
-  contents: read
   pages: write
   id-token: write
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
-    steps:
-      # 1. Забираем код
-      - uses: actions/checkout@v3
 
-      # 2. Устанавливаем Ruby
+    steps:
+      # 1) Забираем весь код
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # 2) Настраиваем GitHub Pages
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v3
+
+      # 3) Устанавливаем Ruby (с поддержкой bundler)
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.x'
+          ruby-version: 3.1
 
-      # 3. Устанавливаем зависимости
+      # 4) Устанавливаем гемы из Gemfile
       - name: Install dependencies
         run: bundle install --jobs 4 --retry 3
 
-      # 4. Собираем сайт
-      - name: Build the site
+      # 5) Собираем статический сайт в папку _site
+      - name: Build site with Jekyll
         run: bundle exec jekyll build --destination _site
 
-      # 5. Загружаем артефакт для деплоя
+      # 6) Упаковываем полученный _site для деплоя
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v1
         with:
-          path: ./_site
+          path: _site
 
   deploy:
-    needs: build
+    needs: build-and-deploy
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+
     steps:
-      # 6. Деплой
+      # 7) Публикуем Pages
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v1
