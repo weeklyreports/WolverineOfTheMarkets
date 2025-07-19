@@ -1,22 +1,25 @@
-# Базовая тема (можно закомментировать, если хотите полностью контролировать через _layouts)
-remote_theme: pages-themes/minima@v0.2.0
+# ════════════════════════════════════════════════════════════
+# Отключаем любую внешнюю тему — полностью контролируем через _layouts
+theme: null
 
-# Плагины Jekyll
+# Плагины Jekyll (jenkins-pages автоматически поддерживает эти)
 plugins:
   - jekyll-feed
+  - jekyll-remote-theme
 
-# Markdown‑парсер
+# Парсер Markdown
 markdown: kramdown
 
-# Общий формат URL для всех постов
+# Формат ссылок для всех постов (корневая папка)
 permalink: /:year-:month-:day-:title.html
 
-# Значения по умолчанию для _posts
+# Значения по умолчанию для всего, что лежит в _posts/
 defaults:
   -
     scope:
-      path: ""     # весь сайт
-      type: "posts"
+      path: ""       # весь сайт
+      type: "posts"  # только файлы в _posts/
     values:
-      layout: "post"
-      permalink: "/:year-:month-:day-:title.html"
+      layout: post
+      permalink: /:year-:month-:day-:title.html
+# ════════════════════════════════════════════════════════════
