@@ -1,18 +1,16 @@
-# _config.yml
-theme: null            # отключаем любую внешнюю тему — работаем только с локальными layouts
+theme: null
 
 plugins:
-  - jekyll-feed       # ваш плагин для RSS (оставьте, если нужен)
-#  - jekyll-remote-theme   # НЕ нужно, если вы больше не используете remote_theme
+  - jekyll-feed
 
-markdown: kramdown     # парсер Markdown
+markdown: kramdown
 
 permalink: /:year-:month-:day-:title.html
 
 defaults:
   -
     scope:
-      path: ""       
+      path: ""
       type: "posts"
     values:
       layout: post
