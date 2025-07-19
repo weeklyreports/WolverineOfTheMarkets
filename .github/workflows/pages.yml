@@ -1,42 +1,46 @@
 # .github/workflows/pages.yml
+
 name: Deploy Jekyll site to GitHub Pages
 
 on:
   push:
     branches:
       - main
-  workflow_dispatch:   # можно запускать вручную из UI
-
-permissions:
-  contents: read       # нужно читать репозиторий
-  pages: write         # нужно право заливать Pages
-  id-token: write      # для GitHub Pages
 
 jobs:
-  build-deploy:
+  build:
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
-      - name: Set up Ruby
+      - name: Setup Ruby & cache gems
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.x'      # любая актуальная 3.x
-          bundler-cache: true      # кэшируем vendor/bundle автоматически
+          ruby-version: '3.x'       # подберите вашу версию Ruby
+          bundler-cache: true       # кешировать гемы между прогонками
+
+      - name: Install dependencies
+        run: bundle install
 
       - name: Build site with Jekyll
-        # bundler-cache: true автоматически делает `bundle install`
-        run: |
-          bundle exec jekyll build --destination ./_site
+        run: bundle exec jekyll build --config _config.yml
 
-      - name: Deploy to GitHub Pages
-        uses: actions/configure-pages@v3
-
-      - name: Upload artifact for deployment
-        uses: actions/upload-pages-artifact@v2
+      - name: Upload generated site
+        uses: actions/upload-pages-artifact@v1
         with:
           path: ./_site
 
-      - name: Publish to GitHub Pages
-        uses: actions/deploy-pages@v2
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
