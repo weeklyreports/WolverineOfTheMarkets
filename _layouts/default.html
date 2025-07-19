@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>{{ page.title }}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Примитивные стили для «тёмной» фоны + светлые буквы */
+    body { background: #111; color: #eee; }
+    a { color: #38bdf8; }
+  </style>
+</head>
+<body class="font-sans p-4">
+  <header class="mb-8">
+    <h1 class="text-4xl"><a href="/">WolverineOfTheMarkets</a></h1>
+  </header>
+  <main class="max-w-4xl mx-auto">
+    {{ content }}
+  </main>
+  <footer class="mt-12 text-gray-500 text-sm text-center">
+    &copy; {{ site.time | date: "%Y" }} Weekly Reports
+  </footer>
+</body>
+</html>
