@@ -33,7 +33,18 @@ jobs:
           bundle install
 
       - name: Build Jekyll site
-        run: bundle exec jekyll build
+        run: bundle exec jekyll build --destination _site
+
+      - name: Debug _site content and links
+        run: |
+          echo "Listing all files in _site:"
+          find _site
+          echo "Checking for symbolic links in _site:"
+          find _site -type l
+          echo "Checking for hard links (files with link count > 1) in _site:"
+          find _site -type f -links +1
+          echo "Disk usage of _site directory:"
+          du -sh _site
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
