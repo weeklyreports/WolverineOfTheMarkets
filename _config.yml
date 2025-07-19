@@ -1,6 +1,23 @@
-# _config.yml
-title: WolverineOfTheMarkets
-theme: minima         # готовая тема от GitHub, можно поменять
-markdown: kramdown
+# Выбираем тему через remote_theme (или закомментируйте, если не нужно)
+remote_theme: pages-themes/minima@v0.2.0
+
+# Плагины, которые нам необходимы
 plugins:
   - jekyll-feed
+
+# Парсер Markdown
+markdown: kramdown
+
+# Общий шаблон ссылок — чтобы посты лежали в корне с нужным именем
+permalink: /:year-:month-:day-:title.html
+
+# Значения по умолчанию для контента в папке _posts/
+defaults:
+  -
+    scope:
+      path: ""     # означает весь сайт
+      type: "posts"  # только файлы из _posts/
+    values:
+      layout: "post"
+      # (необязательно, т. к. уже указан глобальный permalink выше)
+      permalink: "/:year-:month-:day-:title.html"
